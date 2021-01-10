@@ -55,19 +55,5 @@ class EarlyStopping:
         return self.early_stop
 
     def save_checkpoint(self, score):
-        if self.big_server:
-            def my_copy():
-                remote_scp(type='remoteWrite',
-                           host_ip="192.168.1.213",
-                           remote_path='/home/zsp/python/relation_extraction/saved_model/large/{:6}.ckpt'.format(
-                               int(score * 1000000)),
-                           local_path=self.path,
-                           username='zsp',
-                           password='shenpeng12.')
-                os.remove(self.path)
-            torch.save(self.model.state_dict(), self.path)
-            copy_p = Process(target=my_copy)
-            copy_p.start()
-        else:
-            path = "{}_{:6}.ckpt".format(self.path[:-5], int(score * 1000000))
-            torch.save(self.model.state_dict(), path)
+        path = "{}_{:6}.ckpt".format(self.path[:-5], int(score * 1000000))
+        torch.save(self.model.state_dict(), path)
